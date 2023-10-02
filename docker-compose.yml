@@ -3,7 +3,7 @@ networks:
     driver: bridge
 
 services:
-  express-api:
+  express-api-1:
     build: './express-api'
     image: 'express-api-image'
     networks:
@@ -11,10 +11,36 @@ services:
     volumes:
       - './express-api:/express-api'
     environment:
-      - PORT=${EXPRESS_API_PORT}
-    mem_limit: '512m'
-    cpus: '1'
+      - PORT=${EXPRESS_API_PORT_1}
+    mem_limit: '256m'
+    cpus: '0.5'
     cpuset: '2'
+  
+  express-api-2:
+    build: './express-api'
+    image: 'express-api-image'
+    networks:
+      - nginx-network
+    volumes:
+      - './express-api:/express-api'
+    environment:
+      - PORT=${EXPRESS_API_PORT_2}
+    mem_limit: '256m'
+    cpus: '0.5'
+    cpuset: '3'
+
+  express-api-3:
+    build: './express-api'
+    image: 'express-api-image'
+    networks:
+      - nginx-network
+    volumes:
+      - './express-api:/express-api'
+    environment:
+      - PORT=${EXPRESS_API_PORT_3}
+    mem_limit: '256m'
+    cpus: '0.5'
+    cpuset: '4'
 
   website:
     build: './website'
@@ -23,7 +49,7 @@ services:
       - nginx-network
     volumes:
       - './website:/website'
-    mem_limit: '1g'
+    mem_limit: '512m'
     cpus: '1'
     cpuset: '1'
 
@@ -35,7 +61,7 @@ services:
       - './nginx.conf:/etc/nginx/nginx.conf'
     ports:
       - 5000:80
-    mem_limit: '256m'
+    mem_limit: '128m'
     cpus: '1'
     cpuset: '0'
     depends_on:
